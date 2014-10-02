@@ -3,7 +3,7 @@ package controller;
 import javax.faces.bean.ManagedBean;
 
 import model.Autor;
-import persistence.LivroDAO;
+import persistence.AutorDAO;
 
 @ManagedBean
 public class AutorController {
@@ -16,9 +16,8 @@ public class AutorController {
 
 	public String gravar() {
 		System.out.println("Gravando autor " + this.autor.getNome());
-
 		
-		new LivroDAO<Autor>(Autor.class).adiciona(this.autor);
+		new AutorDAO().create(this.autor);
 		return "livro?faces-redirect=true";
 	}
 }

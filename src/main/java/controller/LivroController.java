@@ -10,10 +10,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 
+import persistence.AutorDAO;
 import persistence.LivroDAO;
 import model.Autor;
 import model.Livro;
-
 
 @ManagedBean
 @ViewScoped
@@ -24,32 +24,33 @@ public class LivroController implements Serializable {
 	private Livro livro = new Livro();
 
 	private Integer autorId;
-	
+
 	private List<Livro> livros;
-	
+
 	public Livro getLivro() {
 		return livro;
 	}
 
 	public List<Autor> getAutores() {
-		return new LivroDAO<Autor>(Autor.class).listaTodos();
+		return new AutorDAO().listaTodos();
 	}
-	
+
 	public void associarAutor() {
-		Autor autor = new LivroDAO<Autor>(Autor.class).buscaPorId(autorId);
-		
+		Autor autor = new AutorDAO().buscaPorId(autorId);
+
 		this.livro.adicionaAutor(autor);
 	}
-	
+
 	public void gravar() {
 		System.out.println("Gravando livro " + this.livro.getTitulo());
 
 		if (livro.getAutores().isEmpty()) {
-			FacesContext.getCurrentInstance().addMessage("autor", new FacesMessage("O autor é obrigatório"));
+			FacesContext.getCurrentInstance().addMessage("autor",
+					new FacesMessage("O autor é obrigatório"));
 			return;
 		}
 
-		new DAO<Livro>(Livro.class).adiciona(this.livro);
+		new LivroDAO().buscaPorId(autorId);
 		this.livro = new Livro();
 		this.livros = null;
 	}
@@ -64,7 +65,7 @@ public class LivroController implements Serializable {
 
 	public List<Livro> getLivros() {
 		if (livros == null) {
-			livros = new DAO<Livro>(Livro.class).listaTodos();
+			livros = new LivroDAO().listaTodos();
 		}
 		return livros;
 	}
@@ -73,15 +74,17 @@ public class LivroController implements Serializable {
 		this.livros = livros;
 	}
 
-	public void comecaComDigitoUm(FacesContext fc, UIComponent component, Object object) {
+	public void comecaComDigitoUm(FacesContext fc, UIComponent component,
+			Object object) {
 		String isbn = object.toString();
 		if (!isbn.startsWith("1")) {
-			throw new ValidatorException(new FacesMessage("Deveria começar com 1"));
+			throw new ValidatorException(new FacesMessage(
+					"Deveria começar com 1"));
 		}
 	}
-	
+
 	public String formAutor() {
 		return "autor?faces-redirect=true";
 	}
-	
+
 }

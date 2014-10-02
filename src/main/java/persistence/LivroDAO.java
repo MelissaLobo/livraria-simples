@@ -2,7 +2,6 @@ package persistence;
 
 import model.Livro;
 
-public class LivroDAO extends DaoGenerico<Livro, Long>{
+public class LivroDAO extends DAO<Livro, Integer> {
 
-	
 }
